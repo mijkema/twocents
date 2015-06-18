@@ -49,6 +49,8 @@ input {
   -webkit-user-select: none;
   user-select: none;
   width: 60%;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
 }
 .demo-plugin .contributions:before, .demo-plugin .contributions:after {
   content: " ";
@@ -112,6 +114,10 @@ input {
   line-height: 24px;
   outline: 0;
   border: 0;
+  text-decoration: none !important;
+}
+.demo-plugin .vote:hover {
+  text-decoration: none !important;
 }
 .demo-plugin .vote .amount {
   color: #989898;
