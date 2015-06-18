@@ -1,0 +1,119 @@
+.demo-plugin {
+  margin: 1em -1em;
+  background: #fafafa;
+  border-bottom: 1px solid #f1f0f1;
+  overflow: hidden;
+
+  header {
+    height: 45px;
+    background: #363636;
+    position: relative;
+    margin: 0;
+
+    svg {
+      margin: 12px 1em;
+    }
+
+    .button {
+      float: right;
+      display: inline-block;
+      background: $red-box;
+      line-height: 45px;
+      padding: 0 1rem;
+      color: rgba(#fff, .87);
+      font-size: .8em;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+  }
+
+  .contributions {
+    @include clearfix;
+    @include user-select(none);
+    width: 60%;
+
+    ul {
+      padding: 0 .5em;
+      margin: 0;
+    }
+
+    li {
+      float: left;
+      padding: 1em .5em;
+      @include translate3d(0,0,0);
+    }
+
+    .image-deck {
+      width: 100%;
+      position: relative;
+      @include ratio-box(1/1);
+      @include translate3d(0,0,0);
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+      }
+
+      img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+
+  .vote {
+    float: right;
+    color: #989898;
+    font-size: 12px;
+    text-align: right;
+    line-height: 24px;
+    outline: 0;
+    border: 0;
+
+    .heart {
+      display: inline-block;
+      float: right;
+      width: 24px;
+      height: 24px;
+      margin-left: 2px;
+      background: url(../images/favorite_sprite.svg) bottom center no-repeat;
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 24px;
+        height: 24px;
+        opacity: 0;
+        background: url(../images/favorite_sprite.svg) top center no-repeat;
+        @include transition(all .5s ease);
+        @include scale(1.5);
+      }
+    }
+
+    &.vote--voted {
+      color: #c01c22;
+
+      .heart {
+        // background-position: -100px center;
+
+        &:before {
+          display: block;
+          @include scale(1);
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
