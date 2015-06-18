@@ -1,0 +1,15 @@
+@mixin underline($color, $height, $x, $y, $shadow:false) {
+  @include background-image(linear-gradient(transparent 50%, $color 50%));
+  background-repeat: repeat-x;
+  background-size: 100% $height;
+  background-position: $x $y;
+  text-decoration: none;
+
+  @if $shadow {
+    text-shadow: 
+      1px 1px 0 $shadow, 
+      -1px 1px 0 $shadow,
+      2px 1px 0 $shadow,
+      -2px 1px 0 $shadow;
+  }
+}

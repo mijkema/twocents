@@ -1,0 +1,4 @@
+@mixin img-svg($file-1x) {
+  background-image: image_url("#{$file-1x}.png");
+  background-image: asset_url("#{$file-1x}.svg");
+}

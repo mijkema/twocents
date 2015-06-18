@@ -1,0 +1,29 @@
+@mixin translateX($value) {
+  @include transform(translateX($value));
+}
+
+@mixin translateY($value) {
+  @include transform(translateY($value));
+}
+
+@mixin translate($x, $y) {
+  @include transform(translate($x, $y));
+}
+
+@mixin translate3d($x, $y, $z) {
+  @include transform(translate3d($x, $y, $z));
+}
+
+@mixin rotate($deg) {
+  @include transform(rotate($deg));
+}
+
+@mixin scale($x, $y) {
+  @if $y {
+    @include transform(rotate($x, $y));
+  }
+
+  @else {
+    @include transform(rotate($x));
+  }
+}
