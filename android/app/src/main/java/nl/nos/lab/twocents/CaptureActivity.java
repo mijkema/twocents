@@ -9,6 +9,8 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
@@ -46,6 +51,24 @@ public class CaptureActivity extends Activity implements Camera.PictureCallback 
         FrameLayout container = (FrameLayout) findViewById(R.id.container);
         nameField = (EditText) findViewById(R.id.name_field);
         titleField = (EditText) findViewById(R.id.title_field);
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setObject();
+            }
+        };
+        nameField.addTextChangedListener(watcher);
+        titleField.addTextChangedListener(watcher);
         addImageButton = findViewById(R.id.action_button);
         imageRow = (LinearLayout) findViewById(R.id.image_row);
         finishButton = findViewById(R.id.add_image_button);
@@ -79,6 +102,12 @@ public class CaptureActivity extends Activity implements Camera.PictureCallback 
         container.addView(preview);
     }
 
+    private void setObject() {
+        TwoCentsApplication.getInstance().set(new TipObject(
+                createdBitmapList, nameField.getText().toString(), titleField.getText().toString()
+        ));
+    }
+
     private void saveFields() {
         finish();
     }
@@ -89,8 +118,9 @@ public class CaptureActivity extends Activity implements Camera.PictureCallback 
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        setObject();
         camera.release();
+        super.onDestroy();
     }
 
     @Override
@@ -115,14 +145,38 @@ public class CaptureActivity extends Activity implements Camera.PictureCallback 
         return super.onOptionsItemSelected(item);
     }
 
+    public File getAlbumStorageDir(String albumName) {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e(TAG, "Directory not created");
+        }
+        return file;
+    }
+
     @Override
     public void onPictureTaken(byte[] data, Camera camera) {
         Bitmap bmp = BitmapFactory.decodeByteArray(data, 0, data.length);
-
-        int padding = getResources().getDimensionPixelSize(R.dimen.image_preview_padding);
         bmp = rotateBitmap(bmp, 90);
         int scaledHeight = imageRow.getHeight();
-        bmp = Bitmap.createScaledBitmap(bmp, 400, 300, false);
+        bmp = Bitmap.createScaledBitmap(bmp, 800, 600, false);
+
+        File f = getAlbumStorageDir("tip");
+        File imagePath = new File(f.getPath() + "image_" + createdBitmapList.size() + ".png");
+        try {
+            FileOutputStream fos = new FileOutputStream(imagePath);
+            bmp.compress(Bitmap.CompressFormat.PNG, 85, fos);
+            fos.flush();
+            fos.close();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Log.e(TAG, "" + f.getAbsolutePath() + f.getName());
+
+        int padding = getResources().getDimensionPixelSize(R.dimen.image_preview_padding);
         if (bmp != null) {
             createdBitmapList.add(bmp);
             ImageView capturedImage = new ImageView(this);
@@ -134,6 +188,8 @@ public class CaptureActivity extends Activity implements Camera.PictureCallback 
         }
 
         camera.startPreview();
+
+        setObject();
     }
 
     public static Bitmap rotateBitmap(Bitmap source, float angle) {

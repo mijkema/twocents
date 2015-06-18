@@ -8,6 +8,7 @@ import android.app.Application;
 public class TwoCentsApplication extends Application {
 
     private static TwoCentsApplication instance;
+    private TipObject tipObject;
 
     @Override
     public void onCreate() {
@@ -17,5 +18,13 @@ public class TwoCentsApplication extends Application {
 
     public static TwoCentsApplication getInstance() {
         return instance;
+    }
+
+    public void set(TipObject tipObject) {
+        this.tipObject = tipObject;
+    }
+
+    public TipObject getTipObject() {
+        return tipObject;
     }
 }

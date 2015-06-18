@@ -1,39 +1,32 @@
 package nl.nos.lab.twocents;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Browser;
-import android.support.v7.app.ActionBarActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 
 
-public class WebviewActivity extends ActionBarActivity {
+public class WebviewActivity extends Activity {
 
     private static final String ARTICLE_FILE = "Article_hybrid.html";
+    private WebView webview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_webview);
-        WebView webview = (WebView) findViewById(R.id.webview);
-        try {
-            String articleHtml = readAsString(ARTICLE_FILE);
-            webview.loadDataWithBaseURL("http://nos.nl", articleHtml, null, null, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        webview = (WebView) findViewById(R.id.webview);
+        webview.loadUrl("file:///android_asset/local_site/Article.html");
 
         webview.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        webview.getSettings().setJavaScriptEnabled(true);
 
         webview.setWebViewClient(new WebViewClient() {
 
@@ -54,7 +47,7 @@ public class WebviewActivity extends ActionBarActivity {
              */
             private boolean defaultUrlHandling(WebView view, String url) {
 
-                if (url.equals("http://nos.nl/open_video")) {
+                if (url.equals("file:///open_video")) {
                     startActivity(new Intent(WebviewActivity.this, CaptureActivity.class));
                     return true;
                 }
@@ -83,27 +76,14 @@ public class WebviewActivity extends ActionBarActivity {
                 return true;
             }
         });
-
     }
 
-    /**
-     * Read a file in the assets folder associated with ctx as a string.
-     *
-     * @param assetFile The file to read.
-     * @return The string contents of the requested file.
-     * @throws java.io.IOException If the file does not exist.
-     */
-    public String readAsString(String assetFile) throws IOException {
-        // Open the file.
-        InputStream stream = getAssets().open(assetFile);
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        // Read the file from the stream.
-        BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-        String line;
-        StringBuilder result = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            result.append(line);
+        if (TwoCentsApplication.getInstance().getTipObject() != null) {
+            webview.loadUrl("file:///android_asset/local_site/Article_after.html");
         }
-        return result.toString();
     }
 }
