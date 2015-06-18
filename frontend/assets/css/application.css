@@ -38,6 +38,11 @@ input {
   text-transform: uppercase;
   font-weight: 400;
 }
+@media (min-width: 768px) {
+  .demo-plugin header .button {
+    display: none;
+  }
+}
 .demo-plugin .contributions {
   -moz-user-select: -moz-none;
   -ms-user-select: none;
@@ -51,6 +56,11 @@ input {
 }
 .demo-plugin .contributions:after {
   clear: both;
+}
+@media (min-width: 768px) {
+  .demo-plugin .contributions {
+    width: 40%;
+  }
 }
 .demo-plugin .contributions ul {
   padding: 0 .5em;
@@ -102,6 +112,9 @@ input {
   line-height: 24px;
   outline: 0;
   border: 0;
+}
+.demo-plugin .vote .amount {
+  color: #989898;
 }
 .demo-plugin .vote .heart {
   display: inline-block;

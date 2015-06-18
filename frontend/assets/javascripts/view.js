@@ -33,6 +33,16 @@ $(function() {
     $this.find('a.vote').click(function(e) {
       e.preventDefault();
       $(this).toggleClass('vote--voted');
+
+      if(!$(this).data('amount')) {
+        $(this).data('amount', parseInt($(this).find('.amount').text()));
+      }
+
+      if(parseInt($(this).find('.amount').text()) > $(this).data('amount')) {
+        $(this).find('.amount').text($(this).data('amount'));
+      } else {
+        $(this).find('.amount').text($(this).data('amount') + 1);
+      }
     })
 
     function updateTimer($this, length) {

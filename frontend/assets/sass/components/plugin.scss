@@ -24,6 +24,10 @@
       font-size: .8em;
       text-transform: uppercase;
       font-weight: 400;
+
+      @include md {
+        display: none;
+      }
     }
   }
 
@@ -31,6 +35,10 @@
     @include clearfix;
     @include user-select(none);
     width: 60%;
+
+    @include md {
+      width: 40%;
+    }
 
     ul {
       padding: 0 .5em;
@@ -78,6 +86,10 @@
     line-height: 24px;
     outline: 0;
     border: 0;
+
+    .amount {
+      color: #989898;
+    }
 
     .heart {
       display: inline-block;
